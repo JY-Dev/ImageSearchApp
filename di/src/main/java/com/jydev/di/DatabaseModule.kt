@@ -2,6 +2,7 @@ package com.jydev.di
 
 import android.content.Context
 import androidx.room.Room
+import com.jydev.data.local.dao.ImageThumbnailLibraryDao
 import com.jydev.data.local.dao.ImageThumbnailPagingDao
 import com.jydev.data.local.db.ImageThumbnailDataBase
 import com.jydev.data.local.dao.ImageThumbnailRemoteKeyDao
@@ -30,4 +31,8 @@ object DatabaseModule {
     @Singleton
     @Provides
     fun provideImageThumbnailDao(appDatabase: ImageThumbnailDataBase): ImageThumbnailPagingDao = appDatabase.dao()
+
+    @Singleton
+    @Provides
+    fun provideImageThumbnailLibraryDao(appDatabase: ImageThumbnailDataBase): ImageThumbnailLibraryDao = appDatabase.libraryDao()
 }

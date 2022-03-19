@@ -8,7 +8,7 @@ import com.jydev.data.model.local.ImageThumbnailLibraryEntity
 
 @Dao
 interface ImageThumbnailLibraryDao {
-    @Query("SELECT * FROM ImageThumbnailLibrary")
+    @Query("SELECT * FROM ImageThumbnailLibrary ORDER BY insertTime DESC")
     suspend fun getImageThumbnailLibrary() : List<ImageThumbnailLibraryEntity>
 
     @Query("DELETE FROM ImageThumbnailLibrary WHERE `url` =:url")

@@ -1,4 +1,4 @@
-package com.jydev.imagesearchapp.ui
+package com.jydev.imagesearchapp.ui.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

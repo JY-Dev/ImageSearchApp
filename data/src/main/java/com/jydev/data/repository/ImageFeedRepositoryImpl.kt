@@ -6,20 +6,19 @@ import com.jydev.data.datasource.KakaoDataSource
 import com.jydev.data.mapper.toDomain
 import com.jydev.data.mapper.toEntity
 import com.jydev.data.paging.ImageThumbnailRemoteMediator
-import com.jydev.domain.model.ImageThumbnail
-import com.jydev.domain.model.ImageThumbnailLibrary
-import com.jydev.domain.repository.ImageThumbnailRepository
+import com.jydev.domain.model.ImageFeed
+import com.jydev.domain.repository.ImageFeedRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class ImageThumbnailRepositoryImpl @Inject constructor(
+class ImageFeedRepositoryImpl @Inject constructor(
     private val imageThumbnailLocalDataSource: ImageThumbnailLocalDataSource,
     private val kakaoDataSource: KakaoDataSource
-) : ImageThumbnailRepository {
+) : ImageFeedRepository {
 
     @OptIn(ExperimentalPagingApi::class)
-    override suspend fun getImageThumbnailPagingData(query: String , pageSize : Int): Flow<PagingData<ImageThumbnail>> =
+    override suspend fun getImageFeedPagingData(query: String, pageSize : Int): Flow<PagingData<ImageFeed>> =
         Pager(
             PagingConfig(pageSize = pageSize),
             remoteMediator = ImageThumbnailRemoteMediator(
@@ -34,19 +33,19 @@ class ImageThumbnailRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun getImageThumbnailLibrary(): List<ImageThumbnailLibrary> =
+    override suspend fun getImageFeedLibrary(): List<ImageFeed> =
         imageThumbnailLocalDataSource.getImageThumbnailLibrary().map {
             it.toDomain()
         }
 
 
-    override suspend fun deleteImageThumbnailLibraryFromUrl(url: String) =
+    override suspend fun deleteImageFeedLibraryFromUrl(url: String) =
         imageThumbnailLocalDataSource.withTransaction {
             imageThumbnailLocalDataSource.deleteImageThumbnailLibraryFromUrl(url)
         }
 
-    override suspend fun insertImageThumbnailLibrary(imageThumbnailLibrary: ImageThumbnailLibrary) =
+    override suspend fun insertImageFeedLibrary(imageFeed: ImageFeed) =
         imageThumbnailLocalDataSource.withTransaction {
-            imageThumbnailLocalDataSource.insertImageThumbnailLibrary(imageThumbnailLibrary.toEntity())
+            imageThumbnailLocalDataSource.insertImageThumbnailLibrary(imageFeed.toEntity())
         }
 }

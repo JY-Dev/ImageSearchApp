@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.jydev.imagesearchapp.databinding.FragmentImageFeedBinding
+import com.jydev.imagesearchapp.ui.ImageFeedLibraryViewModel
 import com.jydev.imagesearchapp.ui.ImageFeedViewModel
+import com.jydev.imagesearchapp.ui.imagefeed.adapter.ImageFeedPagingAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +18,8 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class ImageFeedFragment : Fragment() {
     private val imageFeedViewModel : ImageFeedViewModel by viewModels()
-    private lateinit var imageThumbnailAdapter : ImageThumbnailFeedPagingAdapter
+    private val imageFeedLibraryViewModel : ImageFeedLibraryViewModel by viewModels({requireActivity()})
+    private lateinit var imageFeedAdapter : ImageFeedPagingAdapter
     lateinit var binding : FragmentImageFeedBinding
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,24 +40,31 @@ class ImageFeedFragment : Fragment() {
     }
 
     private fun setAdapter(){
-        imageThumbnailAdapter = ImageThumbnailFeedPagingAdapter()
+        imageFeedAdapter = ImageFeedPagingAdapter({ imageFeed, libraryStatus ->
+            when(libraryStatus){
+                true -> imageFeedLibraryViewModel.insertImageFeedLibrary(imageFeed)
+                false -> imageFeedLibraryViewModel.deleteImageFeedLibrary(imageFeed.url)
+            }
+        },{
+            imageFeedLibraryViewModel.isImageFeedInLibrary(it)
+        })
     }
 
     private fun FragmentImageFeedBinding.setView(){
-        feedRecyclerView.adapter = imageThumbnailAdapter
+        feedRecyclerView.adapter = imageFeedAdapter
     }
 
     private fun FragmentImageFeedBinding.setListener(){
         searchEditText.setOnEditorActionListener { textView, i, keyEvent ->
-            imageFeedViewModel.getImageThumbnailPagingData(textView.text.toString())
+            imageFeedViewModel.getImageFeedPagingData(textView.text.toString())
             true
         }
     }
 
     private fun observeData() {
-        imageFeedViewModel.imageThumbnailPagingData.observe(viewLifecycleOwner){
+        imageFeedViewModel.imageFeedPagingData.observe(viewLifecycleOwner){
             CoroutineScope(Dispatchers.Main).launch {
-                imageThumbnailAdapter.submitData(it)
+                imageFeedAdapter.submitData(it)
             }
         }
     }

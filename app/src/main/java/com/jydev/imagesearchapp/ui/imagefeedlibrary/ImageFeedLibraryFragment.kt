@@ -5,10 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.jydev.imagesearchapp.databinding.FragmentImageFeedLibrarayBinding
+import com.jydev.imagesearchapp.ui.ImageFeedLibraryViewModel
+import com.jydev.imagesearchapp.ui.imagefeedlibrary.adapter.ImageFeedLibraryAdapter
 
 class ImageFeedLibraryFragment : Fragment() {
-    lateinit var binding : FragmentImageFeedLibrarayBinding
+    private lateinit var binding : FragmentImageFeedLibrarayBinding
+    private lateinit var imageFeedLibraryAdapter : ImageFeedLibraryAdapter
+    private val imageFeedLibraryViewModel : ImageFeedLibraryViewModel by viewModels({requireActivity()})
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -20,12 +25,26 @@ class ImageFeedLibraryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         with(binding){
+            setAdapter()
             setView()
+            observeData()
+        }
+    }
+
+    private fun setAdapter(){
+        imageFeedLibraryAdapter =  ImageFeedLibraryAdapter { url, position ->
+            imageFeedLibraryViewModel.deleteImageFeedLibrary(url)
         }
     }
 
     private fun FragmentImageFeedLibrarayBinding.setView(){
+        imageFeedLibraryRecyclerView.adapter = imageFeedLibraryAdapter
+    }
 
+    private fun observeData(){
+        imageFeedLibraryViewModel.imageFeed.observe(viewLifecycleOwner){
+            imageFeedLibraryAdapter.submitList(it)
+        }
     }
 
 

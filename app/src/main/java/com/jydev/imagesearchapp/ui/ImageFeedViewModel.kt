@@ -5,23 +5,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
-import com.jydev.domain.model.ImageThumbnail
-import com.jydev.domain.usecase.GetImageThumbnailPagingDataUseCase
+import com.jydev.domain.model.ImageFeed
+import com.jydev.domain.usecase.GetImageFeedPagingDataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ImageFeedViewModel @Inject constructor(private val getImageThumbnailPagingDataUseCase: GetImageThumbnailPagingDataUseCase): ViewModel() {
+class ImageFeedViewModel @Inject constructor(private val getImageFeedPagingDataUseCase: GetImageFeedPagingDataUseCase): ViewModel() {
 
-    private val _imageThumbnailPagingData = MutableLiveData<PagingData<ImageThumbnail>>()
-    val imageThumbnailPagingData : LiveData<PagingData<ImageThumbnail>> get() = _imageThumbnailPagingData
+    private val _imageFeedPagingData = MutableLiveData<PagingData<ImageFeed>>()
+    val imageFeedPagingData : LiveData<PagingData<ImageFeed>> get() = _imageFeedPagingData
 
-    fun getImageThumbnailPagingData(query : String){
+    fun getImageFeedPagingData(query : String){
         viewModelScope.launch {
-            getImageThumbnailPagingDataUseCase(query,30).collect {
-                _imageThumbnailPagingData.value = it
+            getImageFeedPagingDataUseCase(query,30).collect {
+                _imageFeedPagingData.value = it
             }
         }
     }
