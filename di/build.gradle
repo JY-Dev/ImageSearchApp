@@ -1,11 +1,9 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'dagger.hilt.android.plugin'
     id 'kotlin-kapt'
 }
-
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 android {
     compileSdk 32
@@ -13,9 +11,11 @@ android {
     defaultConfig {
         minSdk 21
         targetSdk 32
-        buildConfigField "String", "KAKAO_REST_API_KEY", properties['kakao_rest_api_key']
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        buildConfigField "String", "KAKAO_REST_API_URL", '"https://dapi.kakao.com"'
     }
 
     buildTypes {
@@ -35,22 +35,23 @@ android {
 
 dependencies {
     implementation project(":domain")
-    implementation project(":util")
+    implementation project(":data")
+
+    //Hilt
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+
+    //Okhttp3
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+
     //Retrofit2
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
-    //inject
-    implementation 'javax.inject:javax.inject:1'
-
     //room
     implementation "androidx.room:room-runtime:$room_version"
-    implementation "androidx.room:room-ktx:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-    implementation "androidx.room:room-paging:$room_version"
-
-    // Paging3
-    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'

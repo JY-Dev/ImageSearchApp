@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ImageSearchApp</string>
+    <string name="image_feed">이미지 피드</string>
+    <string name="image_feed_library">이미지 피드 보관함</string>
 </resources>
