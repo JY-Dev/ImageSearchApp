@@ -17,7 +17,7 @@ class ImageThumbnailRemoteMediator(
     private val query: String,
     private val imageThumbnailLocalDataSource: ImageThumbnailLocalDataSource,
     private val kakaoDataSource: KakaoDataSource,
-    private val pageSize : Int
+    private val pageSize: Int
 ) : RemoteMediator<Int, ImageThumbnailEntity>() {
     private val cacheTimeOut = TimeUnit.MILLISECONDS.convert(5, TimeUnit.MINUTES)
     private val limitImagePage = 50
@@ -25,12 +25,11 @@ class ImageThumbnailRemoteMediator(
 
     override suspend fun initialize(): InitializeAction {
         val remoteKeyTime = imageThumbnailLocalDataSource.withTransaction {
-                imageThumbnailLocalDataSource.getLastRemoteKey(query)?.insertTimeDate ?: 0L
-            }
-        return if (System.currentTimeMillis() - remoteKeyTime >= cacheTimeOut){
-            InitializeAction.LAUNCH_INITIAL_REFRESH
+            imageThumbnailLocalDataSource.getLastRemoteKey(query)?.insertTimeDate ?: 0L
         }
-        else
+        return if (System.currentTimeMillis() - remoteKeyTime >= cacheTimeOut) {
+            InitializeAction.LAUNCH_INITIAL_REFRESH
+        } else
             InitializeAction.SKIP_INITIAL_REFRESH
     }
 
@@ -47,24 +46,25 @@ class ImageThumbnailRemoteMediator(
             var insertVideoNextKey = -1
             val dataList: List<ImageThumbnailEntity> = mutableListOf<ImageThumbnailEntity>().apply {
                 if (loadImageNextKey != -1) {
-                    val data = kakaoDataSource.searchImage(query, loadImageNextKey,pageSize).toEntity(query)
+                    val data = kakaoDataSource.searchImage(query, loadImageNextKey, pageSize)
+                        .toEntity(query)
                     addAll(data)
                     if (loadImageNextKey != limitImagePage && data.isNotEmpty())
                         insertImageNextKey = loadImageNextKey.plus(1)
                 }
                 if (loadVideoNextKey != -1) {
-                    val data = kakaoDataSource.searchVideo(query, loadImageNextKey,pageSize).toEntity(query)
+                    val data = kakaoDataSource.searchVideo(query, loadImageNextKey, pageSize)
+                        .toEntity(query)
                     addAll(data)
                     if (loadImageNextKey != limitVideoPage && data.isNotEmpty())
                         insertVideoNextKey = loadImageNextKey.plus(1)
                 }
             }
-            if(loadType == LoadType.REFRESH)
-                imageThumbnailLocalDataSource.withTransaction {
+            imageThumbnailLocalDataSource.withTransaction {
+                if (loadType == LoadType.REFRESH) {
                     imageThumbnailLocalDataSource.deleteFromQuery(query)
                     imageThumbnailLocalDataSource.deleteRemoteKeyFromQuery(query)
                 }
-            imageThumbnailLocalDataSource.withTransaction {
                 imageThumbnailLocalDataSource.insertRemoteKey(
                     ImageThumbnailRemoteKeyEntity(
                         query,
@@ -84,14 +84,22 @@ class ImageThumbnailRemoteMediator(
     private suspend fun getImageNextKey(loadType: LoadType) = when (loadType) {
         LoadType.REFRESH -> 1
         LoadType.APPEND ->
-            imageThumbnailLocalDataSource.withTransaction { imageThumbnailLocalDataSource.getLastRemoteKey(query)?.imageNextKey ?: 1 }
+            imageThumbnailLocalDataSource.withTransaction {
+                imageThumbnailLocalDataSource.getLastRemoteKey(
+                    query
+                )?.imageNextKey ?: 1
+            }
         else -> -1
     }
 
     private suspend fun getVideoNextKey(loadType: LoadType) = when (loadType) {
         LoadType.REFRESH -> 1
         LoadType.APPEND ->
-            imageThumbnailLocalDataSource.withTransaction { imageThumbnailLocalDataSource.getLastRemoteKey(query)?.videoNextKey ?: 1 }
+            imageThumbnailLocalDataSource.withTransaction {
+                imageThumbnailLocalDataSource.getLastRemoteKey(
+                    query
+                )?.videoNextKey ?: 1
+            }
         else -> -1
     }
 }
