@@ -32,9 +32,7 @@ class ImageFeedLibraryFragment : Fragment() {
     }
 
     private fun setAdapter(){
-        imageFeedLibraryAdapter =  ImageFeedLibraryAdapter { url, position ->
-            imageFeedLibraryViewModel.deleteImageFeedLibrary(url)
-        }
+        imageFeedLibraryAdapter =  ImageFeedLibraryAdapter()
     }
 
     private fun FragmentImageFeedLibrarayBinding.setView(){

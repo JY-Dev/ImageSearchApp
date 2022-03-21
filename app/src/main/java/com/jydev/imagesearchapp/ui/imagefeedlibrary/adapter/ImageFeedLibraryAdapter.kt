@@ -12,12 +12,10 @@ import com.jydev.imagesearchapp.databinding.ItemImageFeedLibraryBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ImageFeedLibraryAdapter(
-    private val deleteItem: (url: String, position: Int) -> Unit
-) :
+class ImageFeedLibraryAdapter() :
     ListAdapter<ImageFeed, ImageFeedLibraryViewHolder>(diffUtil) {
     override fun onBindViewHolder(holder: ImageFeedLibraryViewHolder, position: Int) {
-        holder.bind(getItem(position), position)
+        holder.bind(getItem(position))
     }
 
     override fun onCreateViewHolder(
@@ -29,8 +27,7 @@ class ImageFeedLibraryAdapter(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
-            ),
-            deleteItem
+            )
         )
 
     companion object {
@@ -53,18 +50,14 @@ class ImageFeedLibraryAdapter(
 
 class ImageFeedLibraryViewHolder(
     private val binding: ItemImageFeedLibraryBinding,
-    private val deleteItem: (url: String, position: Int) -> Unit
 ) : RecyclerView.ViewHolder(binding.root) {
     private val dateTimeFormat = SimpleDateFormat("yyyy년 MM월 dd일 hh:mm:ss", Locale.KOREA)
-    fun bind(item: ImageFeed?, position: Int) {
+    fun bind(item: ImageFeed?) {
         item?.let {
             Glide.with(binding.root)
                 .load(item.url)
                 .into(binding.imageThumbnailView)
             binding.dateTimeText.text = timeMilToDateString(dateTimeFormat, item.dateTime)
-            binding.deleteButton.setOnClickListener {
-                deleteItem(item.url,position)
-            }
         }
     }
 

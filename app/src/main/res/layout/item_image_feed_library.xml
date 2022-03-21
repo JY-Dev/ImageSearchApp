@@ -33,17 +33,9 @@
             app:layout_constraintTop_toBottomOf="@id/image_thumbnail_view"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/delete_button"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:text="2021년 3월 27일 18:30:00"/>
 
-        <Button
-            android:id="@+id/delete_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/delete"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/date_time_text"
-            app:layout_constraintBottom_toBottomOf="@id/date_time_text"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
