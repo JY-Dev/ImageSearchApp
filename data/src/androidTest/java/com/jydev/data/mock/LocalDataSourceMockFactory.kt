@@ -1,4 +1,4 @@
-package com.jydev.data
+package com.jydev.data.mock
 
 import com.jydev.data.model.local.ImageThumbnailEntity
 import com.jydev.data.model.local.ImageThumbnailLibraryEntity

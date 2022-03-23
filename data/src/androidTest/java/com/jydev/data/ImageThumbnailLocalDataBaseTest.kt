@@ -7,6 +7,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.jydev.data.datasource.ImageThumbnailLocalDataSource
 import com.jydev.data.datasource.ImageThumbnailLocalDataSourceImpl
 import com.jydev.data.local.db.ImageThumbnailDataBase
+import com.jydev.data.mock.LocalDataSourceMockFactory
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.After

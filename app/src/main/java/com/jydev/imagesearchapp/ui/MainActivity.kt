@@ -3,7 +3,6 @@ package com.jydev.imagesearchapp.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.fragment.app.viewModels
 import com.google.android.material.tabs.TabLayoutMediator
 import com.jydev.imagesearchapp.R
 import com.jydev.imagesearchapp.databinding.ActivityMainBinding
